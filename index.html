@@ -24,28 +24,51 @@
             * {
                 box-sizing: border-box;
             }
+            
             body {
                 margin: 0px;
-                padding: 80px 50px;
                 background-image:url("https://upload.wikimedia.org/wikipedia/commons/6/6c/Clouds_in_Russia._img_400.jpg");
                 background-size: 100vw;
                 background-repeat: no-repeat;
             }
+            
             #title {
                 background-color: #00000088;
                 color: white;
                 font-size: 80px;
                 border-radius: 16px;
                 padding: 20px 40px;
+                margin: 80px 50px;
                 text-align: center;
                 font-family: "Almarai";
                 backdrop-filter: blur(8px);
+                animation-name: slidein;
+                animation-duration: 1s;
             }
+            
             .lokal {
                 display: inline;
             }
+            
             #thick {
                 font-weight: bolder;
+            }
+            
+            #description {
+                background-color: white;
+                width: 100%;
+                padding: 10px 30px;
+                font-family: "Poppins", sans-serif;
+                text-align: center;
+            }
+            
+            @keyframes slidein {
+                0% {
+                    transform: translateX(-1000px);
+                }
+                100% {
+                    transform: 0px;
+                }
             }
             
         </style>
@@ -54,6 +77,8 @@
         <div id="title">
             <p class="lokal" id="thick">Lokal</p><p class="lokal">.js</p>
         </div>
-        <p>An easy-to-use</p>
+        <div id="description">
+            <p>An easy-to-use library for local storage on Khan Academy!</p>
+        </div>
     </body>
 </html>
