@@ -1,2 +1,2 @@
 # Lokal.js
-An easy-to-use library for local storage on Khan Academy! (pun name, haha >:D)
+As the name might suggest, Lokal.js is a library meant for easy-to-use local storage on KA (Khan Academy). I'm proud of the pun.
