@@ -1,8 +1,16 @@
 <!DOCTYPE html>
+<!--
+
+See it on Github
+https://github.com/99TheDark/Lokal.js
+
+The webpage will explain how to use and add it, but I'm working on it.
+
+-->
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Lokal.js</title>
+        <title>Lokal.js [WIP]</title>
         
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,8 +36,21 @@
             body {
                 margin: 0px;
                 background-image:url("https://upload.wikimedia.org/wikipedia/commons/6/6c/Clouds_in_Russia._img_400.jpg");
-                background-size: 100vw;
+                background-size: 100%;
                 background-repeat: no-repeat;
+            }
+            
+            p {
+                font-family: "Poppins", sans-serif;
+            }
+            
+            h1 {
+                font-size: 45px;
+                font-family: "Poppins", sans-serif;
+                text-align: center;
+                padding-bottom: 5px; 
+                border-bottom: 6px solid lightgray;
+                border-radius: 4px;
             }
             
             #title {
@@ -42,7 +63,7 @@
                 text-align: center;
                 font-family: "Almarai";
                 backdrop-filter: blur(8px);
-                animation: 0.6s ease-out slidein;
+                animation: 0.5s ease-out slidein;
             }
             
             .lokal {
@@ -57,12 +78,22 @@
                 background-color: white;
                 width: 100%;
                 padding: 10px 30px;
-                font-family: "Poppins", sans-serif;
                 text-align: center;
+                margin-top: 150px;
+                font-size: 18px;
             }
             
             #info {
-                animation: 0.5s ease-in-out bounce;
+                animation: 0.8s ease-in-out bounce;
+            }
+            
+            #more {
+                width: 100%;
+                padding: 20px 50px;
+                background-color: white;
+                border-top: 3px solid lightgray;
+                margin-top: 200px;
+                font-size: 18px;
             }
             
             @keyframes slidein {
@@ -85,7 +116,6 @@
                     trasnform: scale(100%);
                 }
             }
-            
         </style>
     </head>
     <body> 
@@ -94,6 +124,9 @@
         </div>
         <div id="description">
             <p id="info">An easy-to-use library for local storage on Khan Academy!</p>
+        </div>
+        <div id="more">
+            <h1 class="">How to Use</h1>
         </div>
     </body>
 </html>
