@@ -3,4 +3,4 @@ As the name might suggest, Lokal.js is a library meant for easy-to-use local sto
 
 I'm proud of the pun.
 
-TODO: Make a quick website to show it off
+TODO: Make a quick website to show it off & object suppoert
