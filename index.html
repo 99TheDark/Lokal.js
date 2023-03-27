@@ -42,8 +42,7 @@
                 text-align: center;
                 font-family: "Almarai";
                 backdrop-filter: blur(8px);
-                animation-name: slidein;
-                animation-duration: 1s;
+                animation: 0.6s ease-out slidein;
             }
             
             .lokal {
@@ -62,12 +61,28 @@
                 text-align: center;
             }
             
+            #info {
+                animation: 0.5s ease-in-out bounce;
+            }
+            
             @keyframes slidein {
                 0% {
-                    transform: translateX(-1000px);
+                    transform: translateX(-100%);
                 }
                 100% {
                     transform: 0px;
+                }
+            }
+            
+            @keyframes bounce {
+                0% {
+                    transform: scale(120%);
+                }
+                70% {
+                    transform: scale(85%);
+                }
+                100% {
+                    trasnform: scale(100%);
                 }
             }
             
@@ -78,7 +93,7 @@
             <p class="lokal" id="thick">Lokal</p><p class="lokal">.js</p>
         </div>
         <div id="description">
-            <p>An easy-to-use library for local storage on Khan Academy!</p>
+            <p id="info">An easy-to-use library for local storage on Khan Academy!</p>
         </div>
     </body>
 </html>
