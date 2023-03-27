@@ -21,10 +21,19 @@ The webpage will explain how to use and add it, but I'm working on it.
         <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;800&display=swap" rel="stylesheet">
 
         <!-- Highlight.js -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/atom-one-dark.min.css"/>
+        <link rel="stylesheet" href="" id="theme"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+        
+        <!-- Initialize -->
         <script>
             console.clear();
+            
+            if(window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) {
+                document.getElementById("theme").href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css";
+            } else {
+                document.getElementById("theme").href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-light.min.css";
+            }
+            
             hljs.initHighlightingOnLoad();
         </script>
         
@@ -33,11 +42,28 @@ The webpage will explain how to use and add it, but I'm working on it.
                 box-sizing: border-box;
             }
             
+            :root {
+                --bg: white;
+                --text: black;
+                --under: lightgray;
+                --code: #f0f0f0;
+            }
+            
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --bg: #262626;
+                    --text: white;
+                    --under: #707070;
+                    --code: #3d3d3d;
+                }
+            }
+            
             body {
                 margin: 0px;
                 background-image:url("https://upload.wikimedia.org/wikipedia/commons/6/6c/Clouds_in_Russia._img_400.jpg");
                 background-size: 100%;
                 background-repeat: no-repeat;
+                color: var(--text);
             }
             
             p {
@@ -49,8 +75,21 @@ The webpage will explain how to use and add it, but I'm working on it.
                 font-family: "Poppins", sans-serif;
                 text-align: center;
                 padding-bottom: 5px; 
-                border-bottom: 6px solid lightgray;
+                border-bottom: 6px solid var(--under);
                 border-radius: 4px;
+            }
+            
+            code {
+                border-radius: 10px;
+                font-size: 14px;
+                padding: 15px !important;
+                display: inline-block;
+                word-break: break-all;
+                background-color: var(--code) !important;
+            }
+            
+            .short {
+                padding: 6px !important;
             }
             
             #title {
@@ -75,7 +114,7 @@ The webpage will explain how to use and add it, but I'm working on it.
             }
             
             #description {
-                background-color: white;
+                background-color: var(--bg);
                 width: 100%;
                 padding: 10px 30px;
                 text-align: center;
@@ -90,10 +129,18 @@ The webpage will explain how to use and add it, but I'm working on it.
             #more {
                 width: 100%;
                 padding: 20px 50px;
-                background-color: white;
-                border-top: 3px solid lightgray;
+                background-color: var(--bg);
                 margin-top: 200px;
                 font-size: 18px;
+            }
+            
+            #import {
+                white-space: normal;
+            }
+            
+            #footer {
+                padding: 10px 50px;
+                font-size: 14px;
             }
             
             @keyframes slidein {
@@ -126,7 +173,59 @@ The webpage will explain how to use and add it, but I'm working on it.
             <p id="info">An easy-to-use library for local storage on Khan Academy!</p>
         </div>
         <div id="more">
-            <h1 class="">How to Use</h1>
+            <h1>How to Use</h1>
+            <p>Like many other libraries, all you have to do is import a script within the head tag. For this library, just paste this into the head.</p>
+            <pre><code id="import"></code></pre>
+            <h1>Documentation</h1>
+            <p>
+                Lokal.js is not large, but it provides a few useful functions. These are the <code class="short">save</code>, <code class="short">load</code>, <code class="short">get</code> and <code class="short">clear</code> functions.
+            </p>
+            <p>
+                First, <code class="short">save</code> takes in an object and saves it to the local storage.
+            </p>
+            <p>
+                Second, <code class="short">load</code> loads all the saved variables onto the global scope, or alternatively an object inputted into the function.
+            </p>
+            <p>
+                Third, <code class="short">get</code> returns the key-value pairs saved into local storage under the project's id.
+            </p>
+            <p>
+                Finally, <code class="short">clear</code> clears everything saved into local storage under the project's id.
+            </p>
+            <p>
+                In practice, a project using <code class="short">Lokal.js</code> would look something like the following. 
+                <pre><code class="language-javascript">var player = {
+    x: 200,
+    y: 300,
+    xv: 0,
+    yv: 0
+};
+
+var level = 0;
+var name = "TheDark";
+
+Lokal.load();
+
+document.addEventListener("click", () => {
+    player.level++;
+
+    Lokal.save({
+        level: level,
+        name: name
+    });
+});</code></pre>
+            </p>
         </div>
+        <div id="footer">
+            <p>Written by <a href="https://www.khanacademy.org/profile/kaid_1007444411542956194078854/">TheDark</a></p>
+        </div>
+        
+        <script type>(() => {
+
+var importCode = document.getElementById("import");
+
+importCode.innerText = "<script src=\"https://cdn.jsdelivr.net/gh/99TheDark/Lokal.js@main/main.js\"></" + "script>";
+
+        })();</script>
     </body>
 </html>
