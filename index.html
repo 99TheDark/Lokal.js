@@ -6,6 +6,8 @@ https://github.com/99TheDark/Lokal.js
 
 Lokal.js is an easy-to-use library for local storage on Khan Academy!
 
+Credit to @ski for thumbnail.js
+
 -->
 <html>
     <head>
@@ -217,7 +219,7 @@ document.addEventListener("click", () => {
             </p>
         </div>
         <div id="footer">
-            <p>Written by <a href="https://www.khanacademy.org/profile/kaid_1007444411542956194078854/">TheDark</a></p>
+            <p>Created by <a href="https://www.khanacademy.org/profile/kaid_1007444411542956194078854/">TheDark</a></p>
         </div>
         
         <script type>(() => {
@@ -227,5 +229,31 @@ var importCode = document.getElementById("import");
 importCode.innerText = "<script src=\"https://cdn.jsdelivr.net/gh/99TheDark/Lokal.js@main/main.js\"></" + "script>";
 
         })();</script>
+        
+        <!-- Thumbnail -->
+        <script type="thumbnail.js" name="thumbnail">
+            const img = loadImage("https://upload.wikimedia.org/wikipedia/commons/3/36/Cumulus_clouds_in_Russia._img_065.jpg");
+            textAlign(LEFT, CENTER);
+            imageMode(CORNER);
+            let d = (width - 600) / 2;
+            draw = () => {
+                clear();
+                image(img, 0, 0, width / img.height * img.width, width);
+                noStroke();
+                fill(0, 135);
+                rect(300 + d, 300, 500, 200, 20);
+                fill(250);
+                textFont("Almarai bold", 100);
+                text("Lokal", 240 + d, 300);
+                textFont("Almarai", 100);
+                text(".js", 420 + d, 300);
+            };
+            //<script> <-- to allow user to reload the webpage
+        </script>
+        
+        <!-- Thumbnail.js -->
+        <canvas style="display: none;" name="ski"></canvas>
+        <script src="https://cdn.jsdelivr.net/gh/thelegendski/ski.js@1.8.14/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/thelegendski/thumbnail.js@1.1.2/main.js"></script>
     </body>
 </html>
