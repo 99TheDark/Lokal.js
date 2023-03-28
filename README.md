@@ -3,4 +3,4 @@ As the name might suggest, Lokal.js is a library meant for easy-to-use local sto
 
 I'm proud of the pun.
 
-TODO: Object support
+TODO: Object support, make the code snippets copy-able
