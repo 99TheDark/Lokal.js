@@ -1,54 +1,331 @@
-var Lokal = (() => {
-    let ka = location.host == "www.kasandbox.org";
-    if(!ka) throw "Lokal.js cannot be used outside Khan Academy";
-    
-    let vIndex = location.href.indexOf("&v=") + 3;
-    let hostIndex = location.href.indexOf("&host=");
-    
-    let Lokal = {};
-    
-    Lokal.author = "99TheDark";
-    Lokal.github = "https://github.com/99TheDark/Lokal.js";
-    
-    Lokal.id = `lokal.js-storage-${location.href.substring(vIndex, hostIndex)}`;
-    Lokal.first = !Object.keys(localStorage).includes(Lokal.id);
-    let search = `${Lokal.id}-`;
-    
-    Lokal.save = function(values) {
-        for(let val in values) {
-            localStorage.setItem(`${Lokal.id}-${val}`, values[val]);
-        }
-    };
-    
-    Lokal.load = function(object) {
-        object ??= window;
+<!DOCTYPE html>
+<!--
+
+See it on Github
+https://github.com/99TheDark/Lokal.js
+
+Lokal.js is an easy-to-use library for local storage on Khan Academy!
+
+Credit to @ski for thumbnail.js: https://www.khanacademy.org/computer-programming/i/6737783223271424
+
+Inspiration for copy button from https://www.khanacademy.org/computer-programming/html-canvas-tutorial/5966934052225024
+
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Lokal.js</title>
         
-        let searchLen = search.length;
-        for(let key in localStorage) {
-            if(key.indexOf(search) == 0) {
-                object[key.substring(searchLen)] = localStorage.getItem(key);
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;800&display=swap" rel="stylesheet">
+        
+        <!-- Icons -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+
+        <!-- Highlight.js -->
+        <link rel="stylesheet" href="" id="theme"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+        
+        <!-- Initialize -->
+        <script>
+            console.clear();
+            
+            if(window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) {
+                document.getElementById("theme").href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css";
+            } else {
+                document.getElementById("theme").href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-light.min.css";
             }
-        }
-    };
-    
-    Lokal.get = function() {
-        let items = {};
-        let searchLen = search.length;
-        for(let key in localStorage) {
-            if(key.indexOf(search) == 0) {
-                items[key.substring(searchLen)] = localStorage.getItem(key);
+            
+            hljs.initHighlightingOnLoad();
+        </script>
+        
+        <style>
+            * {
+                box-sizing: border-box;
             }
-        }
-        return items;
-    };
-    
-    Lokal.clear = function() {
-        for(let key in localStorage) {
-            if(key.indexOf(`${Lokal.id}-`) == 0) {
-                localStorage.removeItem(key);
+            
+            :root {
+                --bg: white;
+                --text: black;
+                --under: lightgray;
+                --code: #f0f0f0;
+                --copy: #ffffff83;
+                --link: #2679ff;
             }
-        }
-    };
-    
-    return Lokal;
-})();
+            
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --bg: #262626;
+                    --text: white;
+                    --under: #707070;
+                    --code: #3d3d3d;
+                    --copy: #00000054;
+                    --link: #588ce0;
+                }
+            }
+            
+            body {
+                margin: 0px;
+                background-image:url("https://upload.wikimedia.org/wikipedia/commons/6/6c/Clouds_in_Russia._img_400.jpg");
+                background-size: 100%;
+                background-repeat: no-repeat;
+                color: var(--text);
+            }
+            
+            p {
+                font-family: "Poppins", sans-serif;
+            }
+            
+            h1 {
+                font-size: 45px;
+                font-family: "Poppins", sans-serif;
+                text-align: center;
+                padding-bottom: 5px; 
+                border-bottom: 6px solid var(--under);
+                border-radius: 4px;
+            }
+            
+            code {
+                border-radius: 10px;
+                font-size: 14px;
+                padding: 15px !important;
+                display: inline-block;
+                word-break: break-all;
+                background-color: var(--code) !important;
+                position: relative;
+            }
+            
+            a {
+                color: var(--link);
+            }
+            
+            .short {
+                padding: 6px !important;
+            }
+            
+            #title {
+                background-color: #00000088;
+                color: white;
+                font-size: 80px;
+                border-radius: 16px;
+                padding: 20px 40px;
+                margin: 80px 50px;
+                text-align: center;
+                font-family: "Almarai";
+                backdrop-filter: blur(8px);
+                animation: 0.5s ease-out slidein;
+            }
+            
+            .lokal {
+                display: inline;
+            }
+            
+            #thick {
+                font-weight: bolder;
+            }
+            
+            #description {
+                background-color: var(--bg);
+                width: 100%;
+                padding: 10px 30px;
+                text-align: center;
+                margin-top: 150px;
+                font-size: 18px;
+            }
+            
+            #info {
+                animation: 0.8s ease-in-out bounce;
+            }
+            
+            #more {
+                width: 100%;
+                padding: 20px 50px;
+                background-color: var(--bg);
+                margin-top: 200px;
+                font-size: 18px;
+            }
+            
+            #import {
+                white-space: normal;
+            }
+            
+            #footer {
+                padding: 10px 50px;
+                font-size: 14px;
+                color: var(--text);
+                background-color: var(--bg);
+                border-top: 3px solid var(--under);
+            }
+            
+            .copy {
+                font-size: 18px;
+                display: inline;
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                background-color: var(--copy);
+                margin: 0px;
+                border-radius: inherit;
+                padding: 5px 9px;
+                border: none;
+                user-select: none;
+                color: var(--text);
+            }
+            
+            .copy .material-icons {
+                font-size: 19px;
+                position: relative;
+                top: 3px;
+                right: 4px;
+                margin: auto 3px;
+            }
+            
+            @keyframes slidein {
+                0% {
+                    transform: translateX(-100%);
+                }
+                100% {
+                    transform: 0px;
+                }
+            }
+            
+            @keyframes bounce {
+                0% {
+                    transform: scale(120%);
+                }
+                70% {
+                    transform: scale(85%);
+                }
+                100% {
+                    trasnform: scale(100%);
+                }
+            }
+        </style>
+    </head>
+    <body> 
+        <div id="title">
+            <p class="lokal" id="thick">Lokal</p><p class="lokal">.js</p>
+        </div>
+        <div id="description">
+            <p id="info">An easy-to-use library for local storage on Khan Academy!</p>
+        </div>
+        <div id="more">
+            <h1>How to Use</h1>
+            <p>Like many other libraries, all you have to do is import a script within the head tag. For this library, just paste this into the head.</p>
+            <pre><code id="import">Hi</code></pre>
+            <h1>Documentation</h1>
+            <p>
+                Lokal.js is not large, but it provides a few useful functions. These are the <code class="short">save</code>, <code class="short">load</code>, <code class="short">get</code> and <code class="short">clear</code> functions.
+            </p>
+            <p>
+                First, <code class="short">save</code> takes in an object and saves it to the local storage.
+            </p>
+            <p>
+                Second, <code class="short">load</code> loads all the saved variables onto the global scope, or alternatively an object inputted into the function.
+            </p>
+            <p>
+                Third, <code class="short">get</code> returns the key-value pairs saved into local storage under the project's id.
+            </p>
+            <p>
+                Finally, <code class="short">clear</code> clears everything saved into local storage under the project's id.
+            </p>
+            <p>
+                In practice, a project using <code class="short">Lokal.js</code> would look something like the following. 
+                <pre><code class="language-javascript">var player = {
+    x: 200,
+    y: 300,
+    xv: 0,
+    yv: 0
+};
+
+var level = 0;
+var name = "TheDark";
+
+Lokal.load();
+
+document.addEventListener("click", () => {
+    player.level++;
+
+    Lokal.save({
+        level: level,
+        name: name
+    });
+});</code></pre>
+            </p>
+        </div>
+        <div id="footer">
+            <p>Created by <a href="https://www.khanacademy.org/profile/kaid_1007444411542956194078854/">TheDark</a></p>
+        </div>
+        
+        <script>
+
+var importCode = document.getElementById("import");
+
+importCode.innerText = "<script src=\"https://cdn.jsdelivr.net/gh/99TheDark/Lokal.js@latest/main.js\"></" + "script>";
+
+        </script>
+        
+        <script type>addEventListener("load", () => {
+
+var copy = `<button class="copy"><span class="material-icons"></span>Copy</button>`;
+var copied = `<button class="copy"><span class="material-icons">\ue5ca</span>Copied</button>`;
+
+var code_blocks = [...document.getElementsByTagName("code")];
+code_blocks.forEach(code => {
+    if(![...code.classList].includes("short")) {
+        code.dataset.text = code.textContent;
+        code.dataset.html = code.innerHTML;
+        
+        code.innerHTML = `${code.innerHTML}${copy}`;
+        
+        code.querySelector(".copy").onclick = () => {
+            let text = document.createElement("textarea");
+            text.style.position = "absolute";
+            text.style.top = "-1000000px";
+            text.value = code.dataset.text;
+            document.body.appendChild(text);
+            text.select();
+            document.execCommand("copy");
+            document.body.removeChild(text);
+            
+            code.innerHTML = `${code.dataset.html}${copied}`;
+            setTimeout(() => {
+                code.innerHTML = `${code.dataset.html}${copy}`;
+            }, 3000);
+        };
+    }
+});
+
+        });</script>
+        
+        <!-- Thumbnail -->
+        <script type="thumbnail.js" name="thumbnail">
+            const img = loadImage("https://upload.wikimedia.org/wikipedia/commons/3/36/Cumulus_clouds_in_Russia._img_065.jpg");
+            textAlign(LEFT, CENTER);
+            imageMode(CORNER);
+            let d = (width - 600) / 2;
+            draw = () => {
+                clear();
+                image(img, 0, 0, width / img.height * img.width, width);
+                noStroke();
+                fill(0, 135);
+                rect(300 + d, 300, 500, 200, 20);
+                fill(250);
+                textFont("Almarai bold", 100);
+                text("Lokal", 240 + d, 300);
+                textFont("Almarai", 100);
+                text(".js", 420 + d, 300);
+            };
+        </script>
+        
+        <!-- Thumbnail.js -->
+        <canvas style="display: none;" name="ski"></canvas>
+        <script src="https://cdn.jsdelivr.net/gh/thelegendski/ski.js@1.8.14/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/thelegendski/thumbnail.js@1.1.2/main.js"></script>
+    </body>
+</html>
