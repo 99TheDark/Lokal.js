@@ -6,7 +6,9 @@ https://github.com/99TheDark/Lokal.js
 
 Lokal.js is an easy-to-use library for local storage on Khan Academy!
 
-Credit to @ski for thumbnail.js
+Credit to @ski for thumbnail.js: https://www.khanacademy.org/computer-programming/i/6737783223271424
+
+Inspiration for copy button from https://www.khanacademy.org/computer-programming/html-canvas-tutorial/5966934052225024
 
 -->
 <html>
@@ -21,6 +23,9 @@ Credit to @ski for thumbnail.js
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;800&display=swap" rel="stylesheet">
+        
+        <!-- Icons -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
 
         <!-- Highlight.js -->
         <link rel="stylesheet" href="" id="theme"/>
@@ -49,6 +54,8 @@ Credit to @ski for thumbnail.js
                 --text: black;
                 --under: lightgray;
                 --code: #f0f0f0;
+                --copy: #ffffff83;
+                --link: #2679ff;
             }
             
             @media (prefers-color-scheme: dark) {
@@ -57,6 +64,8 @@ Credit to @ski for thumbnail.js
                     --text: white;
                     --under: #707070;
                     --code: #3d3d3d;
+                    --copy: #00000054;
+                    --link: #588ce0;
                 }
             }
             
@@ -88,6 +97,11 @@ Credit to @ski for thumbnail.js
                 display: inline-block;
                 word-break: break-all;
                 background-color: var(--code) !important;
+                position: relative;
+            }
+            
+            a {
+                color: var(--link);
             }
             
             .short {
@@ -143,6 +157,32 @@ Credit to @ski for thumbnail.js
             #footer {
                 padding: 10px 50px;
                 font-size: 14px;
+                color: var(--text);
+                background-color: var(--bg);
+                border-top: 3px solid var(--under);
+            }
+            
+            .copy {
+                font-size: 18px;
+                display: inline;
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                background-color: var(--copy);
+                margin: 0px;
+                border-radius: inherit;
+                padding: 5px 9px;
+                border: none;
+                user-select: none;
+                color: var(--text);
+            }
+            
+            .copy .material-icons {
+                font-size: 19px;
+                position: relative;
+                top: 3px;
+                right: 4px;
+                margin: auto 3px;
             }
             
             @keyframes slidein {
@@ -177,7 +217,7 @@ Credit to @ski for thumbnail.js
         <div id="more">
             <h1>How to Use</h1>
             <p>Like many other libraries, all you have to do is import a script within the head tag. For this library, just paste this into the head.</p>
-            <pre><code id="import"></code></pre>
+            <pre><code id="import">Hi</code></pre>
             <h1>Documentation</h1>
             <p>
                 Lokal.js is not large, but it provides a few useful functions. These are the <code class="short">save</code>, <code class="short">load</code>, <code class="short">get</code> and <code class="short">clear</code> functions.
@@ -222,13 +262,46 @@ document.addEventListener("click", () => {
             <p>Created by <a href="https://www.khanacademy.org/profile/kaid_1007444411542956194078854/">TheDark</a></p>
         </div>
         
-        <script type>(() => {
+        <script>
 
 var importCode = document.getElementById("import");
 
-importCode.innerText = "<script src=\"https://cdn.jsdelivr.net/gh/99TheDark/Lokal.js@v1.0.0/main.js\"></" + "script>";
+importCode.innerText = "<script src=\"https://cdn.jsdelivr.net/gh/99TheDark/Lokal.js@latest/main.js\"></" + "script>";
 
-        })();</script>
+        </script>
+        
+        <script type>addEventListener("load", () => {
+
+var copy = `<button class="copy"><span class="material-icons"></span>Copy</button>`;
+var copied = `<button class="copy"><span class="material-icons">\ue5ca</span>Copied</button>`;
+
+var code_blocks = [...document.getElementsByTagName("code")];
+code_blocks.forEach(code => {
+    if(![...code.classList].includes("short")) {
+        code.dataset.text = code.textContent;
+        code.dataset.html = code.innerHTML;
+        
+        code.innerHTML = `${code.innerHTML}${copy}`;
+        
+        code.querySelector(".copy").onclick = () => {
+            let text = document.createElement("textarea");
+            text.style.position = "absolute";
+            text.style.top = "-1000000px";
+            text.value = code.dataset.text;
+            document.body.appendChild(text);
+            text.select();
+            document.execCommand("copy");
+            document.body.removeChild(text);
+            
+            code.innerHTML = `${code.dataset.html}${copied}`;
+            setTimeout(() => {
+                code.innerHTML = `${code.dataset.html}${copy}`;
+            }, 3000);
+        };
+    }
+});
+
+        });</script>
         
         <!-- Thumbnail -->
         <script type="thumbnail.js" name="thumbnail">
@@ -248,7 +321,6 @@ importCode.innerText = "<script src=\"https://cdn.jsdelivr.net/gh/99TheDark/Loka
                 textFont("Almarai", 100);
                 text(".js", 420 + d, 300);
             };
-            //<script> <-- to allow user to reload the webpage
         </script>
         
         <!-- Thumbnail.js -->
