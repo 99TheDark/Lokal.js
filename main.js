@@ -12,31 +12,45 @@ var Lokal = (() => {
 
     Lokal.id = `lokal.js-storage-${location.href.substring(vIndex, hostIndex)}`;
     Lokal.first = !Object.keys(localStorage).includes(Lokal.id);
-    let search = `${Lokal.id}-`;
+    
+    let search = `${Lokal.id}:`;
 
     Lokal.save = function(values) {
-        for(let val in values) {
-            localStorage.setItem(`${Lokal.id}-${val}`, values[val]);
+        for(let key in values) {
+            let val = values[key];
+            if(typeof val == "object") try {
+                val = JSON.stringify(val);
+            } catch {};
+            
+            localStorage.setItem(`${Lokal.id}:${key}`, val);
         }
     };
 
     Lokal.load = function(object) {
         object ??= window;
 
-        let searchLen = search.length;
         for(let key in localStorage) {
             if(key.indexOf(search) == 0) {
-                object[key.substring(searchLen)] = localStorage.getItem(key);
+                let val = localStorage.getItem(key);
+                try {
+                    val = JSON.parse(val);
+                } catch {};
+                
+                object[key.substring(search.length)] = val;
             }
         }
     };
 
     Lokal.get = function() {
         let items = {};
-        let searchLen = search.length;
         for(let key in localStorage) {
             if(key.indexOf(search) == 0) {
-                items[key.substring(searchLen)] = localStorage.getItem(key);
+                let val = localStorage.getItem(key);
+                try {
+                    val = JSON.parse(val);
+                } catch {};
+                
+                items[key.substring(search.length)] = val;
             }
         }
         return items;
@@ -44,7 +58,7 @@ var Lokal = (() => {
 
     Lokal.clear = function() {
         for(let key in localStorage) {
-            if(key.indexOf(`${Lokal.id}-`) == 0) {
+            if(key.indexOf(search) == 0) {
                 localStorage.removeItem(key);
             }
         }
